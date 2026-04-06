@@ -1,111 +1,111 @@
 namespace LabBack.Contracts.Responses;
 
 /// <summary>
-/// Summary view of a PC returned by the API.
+/// Краткое описание ПК, возвращаемое API.
 /// </summary>
 public sealed class PcSummaryResponse
 {
     /// <summary>
-    /// Gets or sets the PC identifier.
+    /// Идентификатор ПК.
     /// </summary>
     public int Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the processor frequency in MHz.
+    /// Частота процессора в МГц.
     /// </summary>
     public int ProcessorFrequency { get; init; }
 
     /// <summary>
-    /// Gets or sets the RAM size in MB.
+    /// Объем оперативной памяти в МБ.
     /// </summary>
     public int RamAmount { get; init; }
 
     /// <summary>
-    /// Gets or sets the user shell.
+    /// Пользовательская оболочка.
     /// </summary>
     public string UserShell { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the operating system.
+    /// Операционная система.
     /// </summary>
     public string Os { get; init; } = string.Empty;
 }
 
 /// <summary>
-/// Summary view of a server returned by the API.
+/// Краткое описание сервера, возвращаемое API.
 /// </summary>
 public sealed class ServerSummaryResponse
 {
     /// <summary>
-    /// Gets or sets the server identifier.
+    /// Идентификатор сервера.
     /// </summary>
     public int Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the processor frequency in MHz.
+    /// Частота процессора в МГц.
     /// </summary>
     public int ProcessorFrequency { get; init; }
 
     /// <summary>
-    /// Gets or sets the RAM size in MB.
+    /// Объем оперативной памяти в МБ.
     /// </summary>
     public int RamAmount { get; init; }
 
     /// <summary>
-    /// Gets or sets the maximum number of simultaneous connections.
+    /// Максимальное количество одновременных подключений.
     /// </summary>
     public int MaxConnections { get; init; }
 
     /// <summary>
-    /// Gets or sets the current number of active connections.
+    /// Текущее количество активных подключений.
     /// </summary>
     public int CurrentConnections { get; init; }
 }
 
 /// <summary>
-/// Standard message response.
+/// Стандартный ответ с сообщением.
 /// </summary>
 public sealed class OperationMessageResponse
 {
     /// <summary>
-    /// Gets or sets the response message.
+    /// Сообщение ответа.
     /// </summary>
     public string Message { get; init; } = string.Empty;
 }
 
 /// <summary>
-/// Response returned after creating a PC or server.
+/// Ответ после создания ПК или сервера.
 /// </summary>
 public sealed class CreatedResourceResponse
 {
     /// <summary>
-    /// Gets or sets the created resource identifier.
+    /// Идентификатор созданного ресурса.
     /// </summary>
     public int Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the status message.
+    /// Текст статуса.
     /// </summary>
     public string Message { get; init; } = string.Empty;
 }
 
 /// <summary>
-/// Response returned when the server connection counter changes.
+/// Ответ при изменении счетчика подключений сервера.
 /// </summary>
 public sealed class ConnectionStatusResponse
 {
     /// <summary>
-    /// Gets or sets the status message.
+    /// Текст статуса.
     /// </summary>
     public string Message { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the current number of active connections.
+    /// Текущее количество активных подключений.
     /// </summary>
     public int CurrentConnections { get; init; }
 
     /// <summary>
-    /// Gets or sets the maximum number of simultaneous connections.
+    /// Максимальное количество одновременных подключений.
     /// </summary>
     public int MaxConnections { get; init; }
 }

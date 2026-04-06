@@ -1,12 +1,12 @@
 namespace LabBack.Contracts;
 
 /// <summary>
-/// Request payload for opening a website on a PC.
+/// Параметры запроса для открытия веб-сайта на ПК.
 /// </summary>
 public sealed class OpenWebsiteRequest
 {
     /// <summary>
-    /// Gets or sets the website URL.
+    /// URL веб-сайта.
     /// </summary>
     public string Url { get; init; } = string.Empty;
 }

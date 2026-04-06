@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LabBack.Controllers;
 
 /// <summary>
-/// Exposes API endpoints for managing PCs and servers in the computer lab.
+/// Описывает API-эндпоинты для управления ПК и серверами в компьютерном классе.
 /// </summary>
 [ApiController]
 [Route("api/computers")]
@@ -16,19 +16,19 @@ public class ComputerController : ControllerBase
     private readonly IComputerLabService _computerLabService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ComputerController"/> class.
+    /// Инициализирует новый экземпляр <see cref="ComputerController"/>.
     /// </summary>
-    /// <param name="computerLabService">Computer lab service used for data access.</param>
+    /// <param name="computerLabService">Сервис компьютерного класса для работы с данными.</param>
     public ComputerController(IComputerLabService computerLabService)
     {
         _computerLabService = computerLabService;
     }
 
     /// <summary>
-    /// Returns all PCs stored in the lab.
+    /// Возвращает все ПК, сохраненные в системе.
     /// </summary>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>The list of PCs.</returns>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Список ПК.</returns>
     [HttpGet("pcs")]
     [ProducesResponseType(typeof(IEnumerable<PcSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PcSummaryResponse>>> GetAllPcs(CancellationToken cancellationToken)
@@ -47,10 +47,10 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all servers stored in the lab.
+    /// Возвращает все серверы, сохраненные в системе.
     /// </summary>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>The list of servers.</returns>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Список серверов.</returns>
     [HttpGet("servers")]
     [ProducesResponseType(typeof(IEnumerable<ServerSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ServerSummaryResponse>>> GetAllServers(CancellationToken cancellationToken)
@@ -69,11 +69,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new PC.
+    /// Создает новый ПК.
     /// </summary>
-    /// <param name="request">Request payload with PC settings.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>Identifier and creation message.</returns>
+    /// <param name="request">Параметры ПК.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Идентификатор и сообщение о создании.</returns>
     [HttpPost("pcs")]
     [ProducesResponseType(typeof(CreatedResourceResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -88,16 +88,16 @@ public class ComputerController : ControllerBase
         return CreatedAtAction(nameof(GetPcInfo), new { id }, new CreatedResourceResponse
         {
             Id = id,
-            Message = "PC created"
+            Message = "ПК создан"
         });
     }
 
     /// <summary>
-    /// Creates a new server.
+    /// Создает новый сервер.
     /// </summary>
-    /// <param name="request">Request payload with server settings.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>Identifier and creation message.</returns>
+    /// <param name="request">Параметры сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Идентификатор и сообщение о создании.</returns>
     [HttpPost("servers")]
     [ProducesResponseType(typeof(CreatedResourceResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -105,12 +105,12 @@ public class ComputerController : ControllerBase
     {
         if (request.MaxConnections < 0 || request.CurrentConnections < 0)
         {
-            return BadRequest("Connections cannot be negative.");
+            return BadRequest("Число подключений не может быть отрицательным.");
         }
 
         if (request.CurrentConnections > request.MaxConnections)
         {
-            return BadRequest("CurrentConnections cannot exceed MaxConnections.");
+            return BadRequest("Текущее число подключений не может превышать максимальное.");
         }
 
         var server = new Server(request.ProcessorFrequency, request.RamAmount, request.MaxConnections, request.CurrentConnections);
@@ -119,16 +119,16 @@ public class ComputerController : ControllerBase
         return CreatedAtAction(nameof(GetServerInfo), new { id }, new CreatedResourceResponse
         {
             Id = id,
-            Message = "Server created"
+            Message = "Сервер создан"
         });
     }
 
     /// <summary>
-    /// Returns the human-readable information string for a PC.
+    /// Возвращает человекочитаемую информацию о ПК.
     /// </summary>
-    /// <param name="id">PC identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the PC.</returns>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение с описанием ПК.</returns>
     [HttpGet("pcs/{id:int}/info")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -137,7 +137,7 @@ public class ComputerController : ControllerBase
         var pc = await _computerLabService.GetPcAsync(id, cancellationToken);
         if (pc is null)
         {
-            return NotFound($"PC with id {id} was not found.");
+            return NotFound($"ПК с идентификатором {id} не найден.");
         }
 
         return Ok(new OperationMessageResponse
@@ -147,11 +147,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Returns the human-readable information string for a server.
+    /// Возвращает человекочитаемую информацию о сервере.
     /// </summary>
-    /// <param name="id">Server identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the server.</returns>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение с описанием сервера.</returns>
     [HttpGet("servers/{id:int}/info")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -160,7 +160,7 @@ public class ComputerController : ControllerBase
         var server = await _computerLabService.GetServerAsync(id, cancellationToken);
         if (server is null)
         {
-            return NotFound($"Server with id {id} was not found.");
+            return NotFound($"Сервер с идентификатором {id} не найден.");
         }
 
         return Ok(new OperationMessageResponse
@@ -170,11 +170,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Simulates a task on the selected PC.
+    /// Выполняет имитацию задачи на выбранном ПК.
     /// </summary>
-    /// <param name="id">PC identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the executed task.</returns>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение о выполненной задаче.</returns>
     [HttpPost("pcs/{id:int}/execute")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -183,7 +183,7 @@ public class ComputerController : ControllerBase
         var pc = await _computerLabService.GetPcAsync(id, cancellationToken);
         if (pc is null)
         {
-            return NotFound($"PC with id {id} was not found.");
+            return NotFound($"ПК с идентификатором {id} не найден.");
         }
 
         return Ok(new OperationMessageResponse
@@ -193,11 +193,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Simulates a task on the selected server.
+    /// Выполняет имитацию задачи на выбранном сервере.
     /// </summary>
-    /// <param name="id">Server identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the executed task.</returns>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение о выполненной задаче.</returns>
     [HttpPost("servers/{id:int}/execute")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -206,7 +206,7 @@ public class ComputerController : ControllerBase
         var server = await _computerLabService.GetServerAsync(id, cancellationToken);
         if (server is null)
         {
-            return NotFound($"Server with id {id} was not found.");
+            return NotFound($"Сервер с идентификатором {id} не найден.");
         }
 
         return Ok(new OperationMessageResponse
@@ -216,12 +216,12 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Opens an application on the selected PC.
+    /// Открывает приложение на выбранном ПК.
     /// </summary>
-    /// <param name="id">PC identifier.</param>
-    /// <param name="request">Request payload with the application name.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the action.</returns>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="request">Название приложения.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение о выполненном действии.</returns>
     [HttpPost("pcs/{id:int}/open-application")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -231,12 +231,12 @@ public class ComputerController : ControllerBase
         var pc = await _computerLabService.GetPcAsync(id, cancellationToken);
         if (pc is null)
         {
-            return NotFound($"PC with id {id} was not found.");
+            return NotFound($"ПК с идентификатором {id} не найден.");
         }
 
         if (string.IsNullOrWhiteSpace(request.AppName))
         {
-            return BadRequest("AppName is required.");
+            return BadRequest("Имя приложения обязательно.");
         }
 
         return Ok(new OperationMessageResponse
@@ -246,12 +246,12 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Opens a website on the selected PC.
+    /// Открывает веб-сайт на выбранном ПК.
     /// </summary>
-    /// <param name="id">PC identifier.</param>
-    /// <param name="request">Request payload with the website URL.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the action.</returns>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="request">URL веб-сайта.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение о выполненном действии.</returns>
     [HttpPost("pcs/{id:int}/open-website")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -261,12 +261,12 @@ public class ComputerController : ControllerBase
         var pc = await _computerLabService.GetPcAsync(id, cancellationToken);
         if (pc is null)
         {
-            return NotFound($"PC with id {id} was not found.");
+            return NotFound($"ПК с идентификатором {id} не найден.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Url))
         {
-            return BadRequest("Url is required.");
+            return BadRequest("URL обязателен.");
         }
 
         return Ok(new OperationMessageResponse
@@ -276,11 +276,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Accepts a new connection on the selected server.
+    /// Принимает новое подключение на выбранном сервере.
     /// </summary>
-    /// <param name="id">Server identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>The updated connection counters.</returns>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленные счетчики подключений.</returns>
     [HttpPost("servers/{id:int}/accept-connection")]
     [ProducesResponseType(typeof(ConnectionStatusResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -290,7 +290,7 @@ public class ComputerController : ControllerBase
         var server = await _computerLabService.GetServerAsync(id, cancellationToken);
         if (server is null)
         {
-            return NotFound($"Server with id {id} was not found.");
+            return NotFound($"Сервер с идентификатором {id} не найден.");
         }
 
         var accepted = server.AcceptConnection(out var message);
@@ -312,11 +312,11 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
-    /// Simulates processing a network request on the selected server.
+    /// Выполняет имитацию обработки сетевого запроса на выбранном сервере.
     /// </summary>
-    /// <param name="id">Server identifier.</param>
-    /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A message describing the server activity.</returns>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Сообщение о работе сервера.</returns>
     [HttpPost("servers/{id:int}/process-request")]
     [ProducesResponseType(typeof(OperationMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -325,7 +325,7 @@ public class ComputerController : ControllerBase
         var server = await _computerLabService.GetServerAsync(id, cancellationToken);
         if (server is null)
         {
-            return NotFound($"Server with id {id} was not found.");
+            return NotFound($"Сервер с идентификатором {id} не найден.");
         }
 
         return Ok(new OperationMessageResponse

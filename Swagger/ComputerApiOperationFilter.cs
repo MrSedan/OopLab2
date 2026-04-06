@@ -7,7 +7,7 @@ using System.Text.Json.Nodes;
 namespace LabBack.Swagger;
 
 /// <summary>
-/// Adds resource tags and curated request/response examples to the computer API.
+/// Добавляет теги ресурсов и подобранные примеры запросов и ответов для API компьютеров.
 /// </summary>
 public sealed class ComputerApiOperationFilter : IOperationFilter
 {
@@ -23,11 +23,11 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
         {
             case nameof(ComputerController.CreatePc):
                 SetRequestExample(operation, BuildCreatePcRequestExample());
-                SetResponseExample(operation, "201", BuildCreatedResourceExample("PC created", 1));
+                SetResponseExample(operation, "201", BuildCreatedResourceExample("ПК создан", 1));
                 break;
             case nameof(ComputerController.CreateServer):
                 SetRequestExample(operation, BuildCreateServerRequestExample());
-                SetResponseExample(operation, "201", BuildCreatedResourceExample("Server created", 2));
+                SetResponseExample(operation, "201", BuildCreatedResourceExample("Сервер создан", 2));
                 break;
             case nameof(ComputerController.GetAllPcs):
                 SetResponseExample(operation, "200", BuildPcListExample());
@@ -65,7 +65,7 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
 
     private static string GetTagName(string? relativePath)
     {
-        return relativePath?.Contains("/servers", StringComparison.OrdinalIgnoreCase) == true ? "Servers" : "PCs";
+        return relativePath?.Contains("/servers", StringComparison.OrdinalIgnoreCase) == true ? "Серверы" : "ПК";
     }
 
     private static void SetRequestExample(OpenApiOperation operation, JsonNode example)

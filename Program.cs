@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "LabBack API",
+        Title = "API LabBack",
         Version = "v1"
     });
 
@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "LabBack API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API LabBack v1");
     });
 }
 
@@ -47,7 +47,7 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated();
 }
 
-app.MapGet("/", () => Results.Ok("LabBack API is running"));
+app.MapGet("/", () => Results.Ok("API LabBack работает"));
 app.MapControllers();
 
 app.Run();
