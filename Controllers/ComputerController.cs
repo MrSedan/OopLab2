@@ -93,6 +93,58 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
+    /// Обновляет существующий ПК.
+    /// </summary>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="request">Новые параметры ПК.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленное краткое описание ПК.</returns>
+    [HttpPut("pcs/{id:int}")]
+    [ProducesResponseType(typeof(PcSummaryResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PcSummaryResponse>> UpdatePc([FromRoute] int id, [FromBody] CreatePcRequest request, CancellationToken cancellationToken)
+    {
+        var userShell = string.IsNullOrWhiteSpace(request.UserShell) ? "XFCE" : request.UserShell;
+        var os = string.IsNullOrWhiteSpace(request.Os) ? "Linux" : request.Os;
+        var updatedPc = new PC(request.ProcessorFrequency, request.RamAmount, userShell, os);
+
+        var pc = await _computerLabService.UpdatePcAsync(id, updatedPc, cancellationToken);
+        if (pc is null)
+        {
+            return NotFound($"ПК с идентификатором {id} не найден.");
+        }
+
+        return Ok(new PcSummaryResponse
+        {
+            Id = pc.Id,
+            ProcessorFrequency = pc.ProcessorFrequency,
+            RamAmount = pc.RamAmount,
+            UserShell = pc.UserShell,
+            Os = pc.Os
+        });
+    }
+
+    /// <summary>
+    /// Удаляет существующий ПК.
+    /// </summary>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Пустой ответ при успешном удалении.</returns>
+    [HttpDelete("pcs/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeletePc([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        var deleted = await _computerLabService.DeletePcAsync(id, cancellationToken);
+        if (!deleted)
+        {
+            return NotFound($"ПК с идентификатором {id} не найден.");
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
     /// Создает новый сервер.
     /// </summary>
     /// <param name="request">Параметры сервера.</param>
@@ -121,6 +173,66 @@ public class ComputerController : ControllerBase
             Id = id,
             Message = "Сервер создан"
         });
+    }
+
+    /// <summary>
+    /// Обновляет существующий сервер.
+    /// </summary>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="request">Новые параметры сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленное краткое описание сервера.</returns>
+    [HttpPut("servers/{id:int}")]
+    [ProducesResponseType(typeof(ServerSummaryResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ServerSummaryResponse>> UpdateServer([FromRoute] int id, [FromBody] CreateServerRequest request, CancellationToken cancellationToken)
+    {
+        if (request.MaxConnections < 0 || request.CurrentConnections < 0)
+        {
+            return BadRequest("Число подключений не может быть отрицательным.");
+        }
+
+        if (request.CurrentConnections > request.MaxConnections)
+        {
+            return BadRequest("Текущее число подключений не может превышать максимальное.");
+        }
+
+        var updatedServer = new Server(request.ProcessorFrequency, request.RamAmount, request.MaxConnections, request.CurrentConnections);
+        var server = await _computerLabService.UpdateServerAsync(id, updatedServer, cancellationToken);
+        if (server is null)
+        {
+            return NotFound($"Сервер с идентификатором {id} не найден.");
+        }
+
+        return Ok(new ServerSummaryResponse
+        {
+            Id = server.Id,
+            ProcessorFrequency = server.ProcessorFrequency,
+            RamAmount = server.RamAmount,
+            MaxConnections = server.MaxConnections,
+            CurrentConnections = server.CurrentConnections
+        });
+    }
+
+    /// <summary>
+    /// Удаляет существующий сервер.
+    /// </summary>
+    /// <param name="id">Идентификатор сервера.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Пустой ответ при успешном удалении.</returns>
+    [HttpDelete("servers/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteServer([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        var deleted = await _computerLabService.DeleteServerAsync(id, cancellationToken);
+        if (!deleted)
+        {
+            return NotFound($"Сервер с идентификатором {id} не найден.");
+        }
+
+        return NoContent();
     }
 
     /// <summary>

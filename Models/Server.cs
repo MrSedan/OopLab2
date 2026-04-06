@@ -27,6 +27,14 @@ public class Server : Computer
 
     public int CurrentConnections { get; private set; }
 
+    public void Update(int processorFrequency, int ramAmount, int maxConnections, int currentConnections)
+    {
+        ProcessorFrequency = processorFrequency;
+        RamAmount = ramAmount;
+        MaxConnections = maxConnections;
+        CurrentConnections = currentConnections;
+    }
+
     public void IncrementConnection()
     {
         CurrentConnections++;

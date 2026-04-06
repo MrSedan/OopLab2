@@ -22,12 +22,16 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
         switch (context.MethodInfo.Name)
         {
             case nameof(ComputerController.CreatePc):
+            case nameof(ComputerController.UpdatePc):
                 SetRequestExample(operation, BuildCreatePcRequestExample());
                 SetResponseExample(operation, "201", BuildCreatedResourceExample("ПК создан", 1));
+                SetResponseExample(operation, "200", BuildPcSummaryExample());
                 break;
             case nameof(ComputerController.CreateServer):
+            case nameof(ComputerController.UpdateServer):
                 SetRequestExample(operation, BuildCreateServerRequestExample());
                 SetResponseExample(operation, "201", BuildCreatedResourceExample("Сервер создан", 2));
+                SetResponseExample(operation, "200", BuildServerSummaryExample());
                 break;
             case nameof(ComputerController.GetAllPcs):
                 SetResponseExample(operation, "200", BuildPcListExample());
@@ -142,6 +146,18 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
         };
     }
 
+    private static JsonObject BuildPcSummaryExample()
+    {
+        return new JsonObject
+        {
+            ["id"] = 1,
+            ["processorFrequency"] = 3200,
+            ["ramAmount"] = 8192,
+            ["userShell"] = "GNOME",
+            ["os"] = "Linux"
+        };
+    }
+
     private static JsonArray BuildServerListExample()
     {
         return new JsonArray
@@ -154,6 +170,18 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
                 ["maxConnections"] = 100,
                 ["currentConnections"] = 12
             }
+        };
+    }
+
+    private static JsonObject BuildServerSummaryExample()
+    {
+        return new JsonObject
+        {
+            ["id"] = 2,
+            ["processorFrequency"] = 2800,
+            ["ramAmount"] = 16384,
+            ["maxConnections"] = 100,
+            ["currentConnections"] = 12
         };
     }
 
