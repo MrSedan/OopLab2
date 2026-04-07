@@ -291,3 +291,7 @@ __pycache__/
 
 .codex
 .omx
+
+report/*
+
+!report/report.tex
