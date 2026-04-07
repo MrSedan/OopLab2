@@ -125,6 +125,46 @@ public class ComputerController : ControllerBase
     }
 
     /// <summary>
+    /// Увеличивает объем оперативной памяти существующего ПК.
+    /// </summary>
+    /// <param name="id">Идентификатор ПК.</param>
+    /// <param name="request">Количество памяти для добавления.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    /// <returns>Обновленное краткое описание ПК.</returns>
+    [HttpPost("pcs/{id:int}/increase-ram")]
+    [ProducesResponseType(typeof(PcSummaryResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PcSummaryResponse>> IncreasePcRam(
+        [FromRoute] int id,
+        [FromBody] IncreasePcRamRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (request.Amount < 0)
+        {
+            return BadRequest("Количество памяти не может быть отрицательным.");
+        }
+
+        var pc = await _computerLabService.GetPcAsync(id, cancellationToken);
+        if (pc is null)
+        {
+            return NotFound($"ПК с идентификатором {id} не найден.");
+        }
+
+        pc.IncreaseRamAmount(request.Amount);
+        await _computerLabService.SaveChangesAsync(cancellationToken);
+
+        return Ok(new PcSummaryResponse
+        {
+            Id = pc.Id,
+            ProcessorFrequency = pc.ProcessorFrequency,
+            RamAmount = pc.RamAmount,
+            UserShell = pc.UserShell,
+            Os = pc.Os
+        });
+    }
+
+    /// <summary>
     /// Удаляет существующий ПК.
     /// </summary>
     /// <param name="id">Идентификатор ПК.</param>

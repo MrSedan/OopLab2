@@ -57,6 +57,10 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
                 SetRequestExample(operation, BuildOpenWebsiteRequestExample());
                 SetResponseExample(operation, "200", BuildMessageExample("ПК открывает сайт: https://example.com"));
                 break;
+            case nameof(ComputerController.IncreasePcRam):
+                SetRequestExample(operation, BuildIncreasePcRamRequestExample());
+                SetResponseExample(operation, "200", BuildPcSummaryExample());
+                break;
             case nameof(ComputerController.AcceptServerConnection):
                 SetResponseExample(operation, "200", BuildConnectionStatusExample());
                 SetResponseExample(operation, "409", BuildMessageExample("Сервер перегружен. Невозможно принять новое подключение."));
@@ -128,6 +132,14 @@ public sealed class ComputerApiOperationFilter : IOperationFilter
         return new JsonObject
         {
             ["url"] = "https://example.com"
+        };
+    }
+
+    private static JsonObject BuildIncreasePcRamRequestExample()
+    {
+        return new JsonObject
+        {
+            ["amount"] = 512
         };
     }
 

@@ -34,6 +34,16 @@ public class PC : Computer
 
     public string Os { get; set; }
 
+    public void IncreaseRamAmount(int amount)
+    {
+        if (amount < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(amount), "Количество памяти не может быть отрицательным.");
+        }
+
+        RamAmount += amount;
+    }
+
     public override string DisplayInfo()
     {
         return $"ПК: ОЗУ {RamAmount} МБ, частота процессора {ProcessorFrequency} МГц, ОС {Os}, пользовательская оболочка {UserShell}";
