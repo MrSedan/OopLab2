@@ -1,52 +1,19 @@
-# Repository Guidelines
+# Project Intelligence
 
-## Project Structure & Module Organization
-This repository is a single ASP.NET Core Web API project (`LabBack.csproj`, `Program.cs`).
-Keep production code grouped by responsibility:
+This project stores all agent instructions in `.agents/`. Read these files on session start.
 
-- `Controllers/` — HTTP endpoints and request validation
-- `Services/` — business logic and database operations
-- `Data/` — `AppDbContext` and persistence setup
-- `Models/` — domain entities such as `PC` and `Server`
-- `Contracts/` — request DTOs for API input
-- `Swagger/` — OpenAPI / Swagger-related setup or assets
-- `appsettings*.json` — environment-specific configuration
+## Required (read first, in parallel)
 
-`docker-compose.yml` starts local PostgreSQL and pgAdmin for development.
-Treat `bin/` and `obj/` as build artifacts; do not edit them manually.
+- `.agents/config.yaml` — project name, description, stack
+- `.agents/rules/*.md` — all rule files are mandatory, apply them throughout the session
 
-## Build, Test, and Development Commands
-Use the .NET CLI from the repository root:
+## Recommended
 
-- `dotnet restore` — download NuGet packages
-- `dotnet build` — compile the API
-- `dotnet run` — start the web server locally
-- `dotnet watch run` — run with hot reload during development
-- `docker compose up -d db pgadmin` — start the local database stack
+- `.agents/knowledge/_index.md` — team knowledge index; read on start, drill into linked files when relevant
+- `.agents/skills/_index.md` — skill index (if exists); read full SKILL.md only when a matching task arises
 
-The default connection string points to `localhost:5432` with `postgres/postgres` credentials.
+## Loading policy
 
-## Coding Style & Naming Conventions
-Follow standard C# conventions:
-
-- 4-space indentation
-- `PascalCase` for types and public members
-- `camelCase` for local variables and parameters
-- `I`-prefixed interfaces, for example `IComputerLabService`
-
-Keep controllers thin; move business logic into services. Prefer nullable reference types and explicit validation for request DTOs.
-
-## Testing Guidelines
-There is no test project in the repository yet.
-When adding tests, create a separate test project at the repo root (for example, `LabBack.Tests/`) and name test classes after the unit under test, such as `ComputerLabServiceTests`.
-Run the full suite with `dotnet test`.
-
-## Commit & Pull Request Guidelines
-Recent commits are very short (`Initial`, `Done`), so use concise, descriptive commit subjects instead of vague messages.
-Prefer imperative style, for example: `Add server connection validation`.
-Pull requests should include a short summary, setup/run notes, and any API or database changes.
-Attach sample requests or screenshots only when they help demonstrate behavior.
-
-## Security & Configuration Tips
-Do not commit real secrets.
-Keep local overrides in `appsettings.Development.json` or environment variables, and update `ConnectionStrings:Postgres` if your database host or credentials differ.
+- For debugging, incidents, deployment, CI, data flow, and hidden-contract tasks: read relevant knowledge early.
+- For local implementation tasks with clear code patterns: start from code, then read only the knowledge that reduces risk or resolves hidden context.
+- If saved knowledge conflicts with the current task framing, surface the conflict explicitly instead of silently choosing one.

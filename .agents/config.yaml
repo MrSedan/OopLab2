@@ -1,0 +1,9 @@
+name: OopLab2
+description: ASP.NET Core Web API for managing PCs and servers in a computer lab backed by PostgreSQL.
+auto_capture: false
+stack:
+  language: C#
+  runtime: .NET 10.0
+  framework: ASP.NET Core, Entity Framework Core, Swashbuckle Swagger
+  testing: none configured; dotnet test has no separate test project
+  package_manager: NuGet via dotnet CLI

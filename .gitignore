@@ -297,3 +297,10 @@ report/*
 !report/report.tex
 !report/*.png
 !report/report.pdf
+
+# agentsge capture temp files
+.agents/.session-marker
+.agents/.capture-log
+.agents/.capture-lock
+.agents/.capture-dirty
+.agents/knowledge/pending/
